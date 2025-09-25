@@ -255,7 +255,7 @@ goto pah
 cls
 color 0F
 set /p perigo="Deseja continuar mesmo assim? (S/N): "
-if /i "%perigo%"=="S" goto Backups
+if /i "%perigo%"=="S" goto RemoveBackups
 if /i "%perigo%"=="N" (
 echo Verifique possibilidade de conexão com a base...
 del /f "%Caminho%\MsgAtualiza.txt"
@@ -263,6 +263,26 @@ goto SolicitarCaminho
 )
 echo Resposta Invalida.
 goto pah
+
+
+
+rem Remover o Backup na pasta AGORA para manter só na BACKUP
+:RemoveBackups
+echo Limpando conteudo de %Caminho%\AGORA\BackupATT
+if exist "%Caminho%\AGORA\BackupATT\" (
+    echo Apagando arquivos...
+    del /q "%Caminho%\AGORA\BackupATT\*.*" >nul 2>&1
+
+    echo Apagando subpastas...
+    for /d %%i in ("%Caminho%\AGORA\BackupATT\*") do rd /s /q "%%i"
+
+    echo BackupATT limpo, pasta principal mantida
+) else (
+    echo Pasta BackupATT nao encontrada
+)
+goto Backups
+
+
 
 
 :: ----------------- BACKUP -----------------
@@ -287,7 +307,7 @@ if %Day% gtr 31 (
 )
 
 rem Definir o caminho da pasta de backup
-set PastaBackup=%Caminho%\Agora\BackupATT\Backup_%DataAtual%
+set PastaBackup=%Caminho%\Backup\BackupATT\Backup_%DataAtual%
 
 rem Verificar se a pasta de backup ja existe
 if exist "%PastaBackup%" (
@@ -663,15 +683,15 @@ for /f "tokens=1,2,3" %%a in ('dir /T:W "%pct%" ^| findstr /R "^[0-9]"') do (
 )
 timeout /t 5 >nul
 echo BOM TRABALHO.
-echo TECNICO RESPONSAVEL: %User% > "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo VERSAO PCT: %dataModificacao6% (OFICIAL) >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo INICIO ATT: %HoraInicio% >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo FIM ATT: %HoraFim% >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo. >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo - VERIFICADO SE EXCLUIU O MSGATUALIZA.TXT DA RAIZ DO SISPLAN; >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo - ATUALIZADO PARAMETROS E CONSULTADO OS MENUS DO SISTEMA; >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo - INICIADO OS SERVICOS QUE FORAM PARADOS; >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
-echo - COMPACTADO O BACKUP; >> "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo TECNICO RESPONSAVEL: %User% > "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo VERSAO PCT: %dataModificacao6% (OFICIAL) >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo INICIO ATT: %HoraInicio% >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo FIM ATT: %HoraFim% >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo. >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo - VERIFICADO SE EXCLUIU O MSGATUALIZA.TXT DA RAIZ DO SISPLAN; >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo - ATUALIZADO PARAMETROS E CONSULTADO OS MENUS DO SISTEMA; >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo - INICIADO OS SERVICOS QUE FORAM PARADOS; >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
+echo - COMPACTADO O BACKUP; >> "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Complete.txt"
 echo.
 
 
@@ -680,7 +700,7 @@ echo.
 cls
 color 0B
 echo BOM TRABALHO.
-echo "Atualizacao finalizada em %date% %time%" > "%Caminho%\Agora\BackupATT\Backup_%DataAtual%\Fim_%DataAtual%.txt"
+echo "Atualizacao finalizada em %date% %time%" > "%Caminho%\Backup\BackupATT\Backup_%DataAtual%\Fim_%DataAtual%.txt"
 echo.
 
 
