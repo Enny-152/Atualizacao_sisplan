@@ -230,7 +230,7 @@ echo [OKAY]
 echo Os IPs sao iguais, continuando a atualizacao sem problemas...
 echo.
 pause
-goto Backups
+goto RemoveBackups
 
 :2
 cls
