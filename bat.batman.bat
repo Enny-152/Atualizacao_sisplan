@@ -134,7 +134,7 @@ if "!dataModificacao!" LSS "%dataComparacao%" (
     echo PCT do cliente antecessor ao 13/09/2024 sera necessario inverter o parametro PRO, 240, 17
     echo Se tiver como 'S' colocar 'N', se tiver 'N' ou vazio colocar 'S'.
     pause
-    goto Msgatualiza
+    goto Msgatualiza1
 ) else (
     cls
     color 0A
@@ -142,11 +142,12 @@ if "!dataModificacao!" LSS "%dataComparacao%" (
     echo [OKAY]
     echo Sem alteracoes de parametros pendentes...
     timeout /t 3 >nul
-    goto Msgatualiza
+    goto Msgatualiza1
 )
 
 
 :: ----------------- MSGATUALIZA -----------------
+:Msgatualiza1
 if not exist "%Caminho%\MsgAtualiza.txt" (
 goto MsgAtualiza
 ) else (
@@ -315,10 +316,12 @@ if exist "%PastaBackup%" (
     echo %PastaBackup%
     echo.
 ) else (
+
+    attrib -r -s -h "%Caminho%\Backup\BackupATT" /s /d
+    rd /s /q "%Caminho%\Backup\BackupATT"
+
     rem Criar uma pasta com a data no formato YYYY-MM-DD
     mkdir "%PastaBackup%"
-    echo Criando pasta de backup: %PastaBackup%
-
     rem Realizar o backup das pastas
     xcopy "%Caminho%\Relatorio" "%PastaBackup%\Relatorio" /E /I /Y >nul
     if exist "%PastaBackup%\Relatorio" echo Backup pasta Relatorio feito com sucesso!
