@@ -678,11 +678,21 @@ goto ContagemRegressiva6
 :: ----------------- COMPLETE ----------------
 cls
 color 0B
+
 for /f %%A in ('powershell -Command "$env:user.ToUpper()"') do set "user=%%A"
 for /f "tokens=1,2 delims=:" %%a in ("%time%") do set "HoraFim=%%a:%%b"
-set "pct2=%Caminho%\PctFaturamento.bpl"
-for /f "tokens=1,2,3" %%a in ('dir /T:W "%pct%" ^| findstr /R "^[0-9]"') do (
-    set dataModificacao6=%%a %%b
+
+set "arquivo=%Caminho%\sisplan.exe"
+for /f "usebackq tokens=* delims=" %%v in (`powershell -NoProfile -Command "(Get-Item '%arquivo%').VersionInfo.ProductVersion"`) do (
+    set "versao=%%v"
+)
+
+rem Remove espaços extras
+set "versao=%versao: =%"
+rem Remove os 3 últimos caracteres
+set "dataModificacao6=%versao:~0,-3%"
+
+echo Versao ATT:  %dataModificacao6%
 )
 timeout /t 5 >nul
 echo BOM TRABALHO.
