@@ -19,19 +19,13 @@ for /f "tokens=2 delims=: " %%a in ('sc query state^= all ^| findstr /I "Nginx"'
 
 :Services1
 echo --------------------------------------------------
-set "ultimoServico1="
-echo Parando os servicos que contenham "Sisp" no nome...
-for /f "tokens=2 delims=: " %%a in ('sc query state^= all ^| findstr /I "Sisp"') do (
-    rem Verifica se o servico já foi processado
-    if "!ultimoServico1!" neq "%%a" (
-        echo Tentando parar o servico %%a...
-        sc stop %%a
-        echo Aguardando 3 segundos...
-        timeout /t 3 /nobreak >nul
-        set "ultimoServico1=%%a"
-    )
+echo Obtendo servicos "Sisp" sem descricao...
+for /f "tokens=*" %%S in ('powershell -NoProfile -Command "Get-CimInstance Win32_Service | Where-Object { [string]::IsNullOrWhiteSpace($_.Description) -and ($_.Name -match 'sisp' -or $_.DisplayName -match 'sisp') } | Select-Object -ExpandProperty Name"') do (
+    set "servico=%%S"
+    echo Tentando parar !servico!...
+    sc stop "!servico!"
+    timeout /t 2 /nobreak >nul
 )
-
 
 :Services2
 echo --------------------------------------------------
