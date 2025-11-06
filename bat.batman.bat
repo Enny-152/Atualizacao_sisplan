@@ -48,6 +48,7 @@ timeout /t 2 >nul
 
 :: ----------------- USERS -----------------
 :Users
+cls
 echo Defina seu usuario e senha a seguir para executar os arquivos do Sisplan:
 set /p User="Digite o usuario: "
 set /p Senha="Digite a senha: "
@@ -316,9 +317,11 @@ if exist "%PastaBackup%" (
     echo %PastaBackup%
     echo.
 ) else (
-
+    echo Removendo backup antigo.
     attrib -r -s -h "%Caminho%\Backup\BackupATT" /s /d
     rd /s /q "%Caminho%\Backup\BackupATT"
+cls
+    echo Fazendo backup atual
 
     rem Criar uma pasta com a data no formato YYYY-MM-DD
     mkdir "%PastaBackup%"
@@ -644,7 +647,7 @@ if /i "%putamerda%"=="S" (
 )
 if /i "%putamerda%"=="N" (
     echo Okay!
-    goto Finaliza
+    goto ContagemRegressiva6
 )
 echo Decida-se!
 goto Yahallo
@@ -727,7 +730,7 @@ echo WshShell.SendKeys "{TAB}"
 echo WshShell.SendKeys "%senha%"
 echo WshShell.SendKeys "{ENTER}"
 echo WScript.Sleep 2000
-echo WshShell.SendKeys "{DELETE}"
+:: echo WshShell.SendKeys "{DELETE}"
 echo WshShell.SendKeys "Sisplan.%user%"
 echo WScript.Sleep 2000
 echo WshShell.SendKeys "{ENTER}"
@@ -748,7 +751,7 @@ call :RunAsAdmin6 "%Bat%Processos\AutoDelete.bat"
 :RunAsAdmin6
 powershell -Command "Start-Process cmd -ArgumentList '/c ""%~1""' -Verb runAs"
 
-echo Script finalizado.
-timeout /t 2 >nul
+:: echo Script finalizado.
+:: timeout /t 2 >nul
 exit
 
